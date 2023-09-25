@@ -30,16 +30,16 @@ footer_description:
 
 
 # Social media users names.  Leave fields blank that you don't want displayed
-twitter_username: 386student
-github_username:  386student
-linkedin_username: 386student
+twitter_username:
+github_username: davisdowdle
+linkedin_username: Davis Dowdle
 dribbble_username: 
-facebook_username: 386student
+facebook_username: Davis Dowdle
 flickr_username:
 instagram_username: 
 pinterest_username:
 youtube_username: 
-googleplus_username: 386student
+googleplus_username: 
 
 plugins:
   - jekyll-feed
