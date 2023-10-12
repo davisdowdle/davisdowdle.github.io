@@ -14,6 +14,13 @@ One of the most common Python connections is to MySQL, a ubiquotous database man
 
 ## Step 1: Install/Import necessary packages.
 
-For this process, you'll need mysql.connector and pandas. 
+For this process, you'll need mysql.connector and pandas. After installation, the code below will import the two.
 
-!['../assets/images/blogpic1.png']
+![Import](../assets/images/blogpic1.png)
+
+## Step 2: Establish the MySQL connection.
+
+In order to successfully establish the connection, you'll need at least the host and user associated with the MySQL database. Many require a password and some a port number. Ideally, the database will also be known to jump right into querying.
+
+In this example, the MySQL database is publicly available. You should be able to connect yourself with the code below if you've followed the above instructions (including MySQL installation and configuration) correctly.
+
