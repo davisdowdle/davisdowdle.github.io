@@ -18,6 +18,8 @@ For this process, you'll need `mysql.connector` and `pandas`. After installation
 
 ![Import]({{site.url}}.{{site.baseurl}}/assets/images/blogpic1.png)
 
+If you run into a problem with this first step, it's likely you haven't installed the packages yet. Just once, run `pip install <package name>` for the appropriate packages you need to install. After that, the code should run smoothly and you should be ready to start your connection.
+
 ## Step 2: Establish the MySQL connection.
 
 In order to successfully establish the connection, you'll need at least the host and user associated with the MySQL database. Many require a password and some a port number. Ideally, the database will also be known to jump right into querying.
@@ -46,4 +48,6 @@ Now that you've got the query, you can save it as an object and modify it as a r
 
 Now you can see that the code to draw MySQL queries is not complicated. Hopefully you tried the example above on your own and saw the connector in action. If you didn't, be sure to give it a try. 
 
-Almost always, a connection is going to be more efficient than generating intermediate files with However, it can be complicated to figure out some of the arguments. Try building your own MySQL stucture and connecting to it so you can experiment and figure out potential challenges to making MySQL connections. Make sure you have fun while you do it too!
+Almost always, a connection is going to be more efficient than generating intermediate files from SQL queries, managing those, and then reading them into Python. For example, if your employer asks you to analyze some MySQL data in Python, you'd do much better to extract it directly from the server through a connection instead of querying thd data in MySQL, sending it to a CSV, and then reading it into Python. Trust me, it will save you time and storage in the long run and you'll look good doing it. ;)
+
+However, it can be complicated to figure out some of the arguments of a connection. Try building your own MySQL stucture and connecting to it so you can experiment and figure out potential challenges to making MySQL connections. Make sure you have fun while you do it too!
