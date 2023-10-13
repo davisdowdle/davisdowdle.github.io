@@ -30,7 +30,7 @@ In this example, the MySQL database known as 'Rfam' is publicly available. Anyon
 
 ## Step 3: Define and extract the SQL query.
 
-Now, write the SQL code you would like to pull from the database. Here is a sample query drawn from the database in the connection established above. If you'd like to get more acquainted with this database and write your own code or copy the query below, more details can be found at the following address: <a href="https://docs.rfam.org/en/latest/database.html", target="_blank">Rfam Database</a>
+Now, write the SQL code you would like to pull from the database. Here is a sample query drawn from the database in the connection established above. If you'd like to get more acquainted with this database and write your own code or copy the query below, more details can be found at the following address: <a href="https://docs.rfam.org/en/latest/database.html" target="_blank">Rfam Database</a>
 
 After defining the query, the simple `pd.read_sql()` command with the query as the first argument and the connection as the second argument will draw the output from the database.
 
