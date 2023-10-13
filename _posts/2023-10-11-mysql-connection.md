@@ -14,7 +14,7 @@ One of the most common Python connections is to MySQL, a ubiquotous database man
 
 ## Step 1: Install/Import necessary packages.
 
-For this process, you'll need mysql.connector and pandas. After installation, the code below will import the two.
+For this process, you'll need `mysql.connector` and `pandas`. After installation, import these two packages.
 
 ![Import]({{site.url}}.{{site.baseurl}}/assets/images/blogpic1.png)
 
@@ -22,13 +22,15 @@ For this process, you'll need mysql.connector and pandas. After installation, th
 
 In order to successfully establish the connection, you'll need at least the host and user associated with the MySQL database. Many require a password and some a port number. Ideally, the database will also be known to jump right into querying.
 
-In this example, the MySQL database is publicly available. You should be able to connect yourself with the code below if you've followed the above instructions (including MySQL installation and configuration) correctly.
+Use the `connect` method of the `mysql.connector` object and supply the necessary arguments (host, user, password, port, database, etc.) to make the connection. Assigning the connection to an object is the most efficient.
+
+In this example, the MySQL database known as 'Rfam' is publicly available. Anyone can access it, so there is no password. You should be able to connect yourself with the code below if you've followed the above instructions correctly.
 
 ![Connect]({{site.url}}/{{site.baseurl}}/assets/images/blogpic2.png)
 
 ## Step 3: Define and extract the SQL query.
 
-Now, write the SQL code you would like to pull from the database. Here is a sample query drawn from the database in the connection established above. If you'd like to get more acquainted with this database and write your own code or copy the query below, more details can be found at the following address: [Rfam Database](https://docs.rfam.org/en/latest/database.html).
+Now, write the SQL code you would like to pull from the database. Here is a sample query drawn from the database in the connection established above. If you'd like to get more acquainted with this database and write your own code or copy the query below, more details can be found at the following address: <a href="https://docs.rfam.org/en/latest/database.html", target="_blank">Rfam Database</a>
 
 After defining the query, the simple `pd.read_sql()` command with the query as the first argument and the connection as the second argument will draw the output from the database.
 
