@@ -8,7 +8,7 @@ image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCfkWw2A2cc_wd__da
 
 #### Note: MySQL should usually be installed locally prior to the below procedures. Because this particular MySQL server is public (and a local version of MySQL may not be required), a tutorial for this will not be covered below. 
 
-Python on its own is an extremely powerful resource. What makes Python versatile and useful though is its ability to pair with other programs, including database infrastructures. As such, in order to use Python to the fullest--and make a good impression of yourself--you'll need to know how to exploit this basic aspect of the world's most common programming language. 
+Python on its own is an extremely powerful resource. What makes Python versatile and useful though is its ability to pair with other programs, including database infrastructures. As such, in order to use Python to the fullest--and make a good impression of yourself--you'll need to know how to exploit this basic aspect of the world's most popular programming language. 
 
 One of the most common Python connections is to MySQL, a ubiquotous database management system operated through SQL commands. Here's how to establish a MySQL connection and draw query output into a pandas dataframe in 3 easy steps.
 
