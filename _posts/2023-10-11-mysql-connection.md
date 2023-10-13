@@ -6,11 +6,11 @@ description: Here's how you can create a MySQL connection and pull queries in Py
 image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCfkWw2A2cc_wd__da3HxhRZOYTUBevkf0OA&usqp=CAU"
 --- 
 
-#### Note: MySQL should be installed locally prior to attempting this. This will not be covered below. Before moving on, make sure your local computer has MySQL prepared.
+#### Note: MySQL should usually be installed locally prior to the below procedures. Because this particular MySQL server is public, a tutorial for this will not be covered below. 
 
 Python on its own is an extremely powerful resource. What makes Python versatile and useful though is its ability to pair with other programs, including database infrastructures. As such, in order to use Python to the fullest--and make a good impression of yourself--you'll need to know how to exploit this basic aspect of the world's most common programming language. 
 
-One of the most common Python connections is to MySQL, a ubiquotous database management system operated through SQL commands. Here's how to establish a MySQL connection and draw query output into a pandas dataframe. 
+One of the most common Python connections is to MySQL, a ubiquotous database management system operated through SQL commands. Here's how to establish a MySQL connection and draw query output into a pandas dataframe in 3 easy steps.
 
 ## Step 1: Install/Import necessary packages.
 
@@ -24,3 +24,18 @@ In order to successfully establish the connection, you'll need at least the host
 
 In this example, the MySQL database is publicly available. You should be able to connect yourself with the code below if you've followed the above instructions (including MySQL installation and configuration) correctly.
 
+![Connect]({{site.url}}/{{site.baseurl}}/assets/images/blogpic2.png)
+
+## Step 3: Define and extract the SQL query.
+
+Now, write the SQL code you would like to pull from the database. Here is a sample query drawn from the database in the connection established above. If you'd like to get more acquainted with this database and write your own code or copy the query below, more details can be found at the following address: [Rfam Database](https://docs.rfam.org/en/latest/database.html).
+
+After defining the query, the simple `pd.read_sql()` command with the query as the first argument and the connection as the second argument will draw the output from the database.
+
+![Extract]({{site.url}}/{{site.baseurl}}/assets/images/blogpic3.png)
+
+Ta-da! If you used the query above, your output should look similar to below. 
+
+![Output]({{site.url}}/{{site.baseurl}}/assets/images/blogpic4.png)
+
+Now that you've got the query, you can save it as an object and modify it as a regular pandas dataframe now. 
