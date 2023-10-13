@@ -1,12 +1,12 @@
 ---
 layout: post
-title:  Python MySQL Connection
+title:  Make a MySQL Connection in Python!
 author: Davis Dowdle
 description: Here's how you can create a MySQL connection and pull queries in Python.
 image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCfkWw2A2cc_wd__da3HxhRZOYTUBevkf0OA&usqp=CAU"
 --- 
 
-#### Note: MySQL should usually be installed locally prior to the below procedures. Because this particular MySQL server is public, a tutorial for this will not be covered below. 
+#### Note: MySQL should usually be installed locally prior to the below procedures. Because this particular MySQL server is public (and a local version of MySQL may not be required), a tutorial for this will not be covered below. 
 
 Python on its own is an extremely powerful resource. What makes Python versatile and useful though is its ability to pair with other programs, including database infrastructures. As such, in order to use Python to the fullest--and make a good impression of yourself--you'll need to know how to exploit this basic aspect of the world's most common programming language. 
 
@@ -30,7 +30,7 @@ In this example, the MySQL database known as 'Rfam' is publicly available. Anyon
 
 ## Step 3: Define and extract the SQL query.
 
-Now, write the SQL code you would like to pull from the database. Here is a sample query drawn from the database in the connection established above. If you'd like to get more acquainted with this database and write your own code or copy the query below, more details can be found at the following address: <a href="https://docs.rfam.org/en/latest/database.html" target="_blank">Rfam Database</a>
+Now, write the SQL code you would like to pull from the database. Below is a sample query drawn from the database in the connection established above. If you'd like to get more acquainted with this database and write your own query or copy the query below, more details can be found at the following address: <a href="https://docs.rfam.org/en/latest/database.html" target="_blank">Rfam Database</a>
 
 After defining the query, the simple `pd.read_sql()` command with the query as the first argument and the connection as the second argument will draw the output from the database.
 
@@ -41,3 +41,9 @@ Ta-da! If you used the query above, your output should look similar to below.
 ![Output]({{site.url}}/{{site.baseurl}}/assets/images/blogpic4.png)
 
 Now that you've got the query, you can save it as an object and modify it as a regular pandas dataframe now. 
+
+## Next Steps:
+
+Now you can see that the code to draw MySQL queries is not complicated. Hopefully you tried the example above on your own and saw the connector in action. If you didn't, be sure to give it a try. 
+
+Almost always, a connection is going to be more efficient than generating intermediate files with However, it can be complicated to figure out some of the arguments. Try building your own MySQL stucture and connecting to it so you can experiment and figure out potential challenges to making MySQL connections. Make sure you have fun while you do it too!
