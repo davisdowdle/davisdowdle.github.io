@@ -42,12 +42,12 @@ Ta-da! If you used the query above, your output should look similar to below.
 
 ![Output]({{site.url}}/{{site.baseurl}}/assets/images/blogpic4.png)
 
-Now that you've got the query, you can save it as an object and modify it as a regular pandas dataframe now. 
+Now that you've got the query, you can save it as an object and modify it as a regular pandas dataframe. 
 
 ## Next Steps:
 
 Now you can see that the code to draw MySQL queries is not complicated. Hopefully you tried the example above on your own and saw the connector in action. If you didn't, be sure to give it a try. 
 
-Almost always, a connection is going to be more efficient than generating intermediate files from SQL queries, managing those, and then reading them into Python. For example, if your employer asks you to analyze some MySQL data in Python, you'd do much better to get the server details and extract it directly from the database through a connection instead of querying thd data in MySQL, sending it to a CSV, and then reading it into Python. Trust me, it will save you time and storage in the long run and you'll look good doing it. ;)
+Almost always, a connection is going to be more efficient than generating intermediate files from SQL queries, managing those, and then reading them into Python. For example, if your employer asks you to analyze some MySQL data in Python, you'd do much better to get the server details and extract it directly from the database through a connection instead of querying the data in MySQL, sending it to a CSV, and then reading it into Python. Trust me, it will save you time and storage in the long run and you'll look good doing it. ;)
 
 However, it can be complicated to figure out some of the arguments of a connection. Try building your own MySQL stucture and connecting to it so you can experiment and figure out potential challenges to making MySQL connections. Make sure you have fun while you do it too!
