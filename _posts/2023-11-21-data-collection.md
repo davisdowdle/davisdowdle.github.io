@@ -16,4 +16,4 @@ Becuase the majority of the data came from Wikipedia, most of it already existed
 
 ## Variables
 
-![hello]({{site.url}}.{{site.baseurl}}/assets/images/trade.pdf)
+![hello]({{site.url}}.{{site.baseurl}}/assets/images/trade.png)
