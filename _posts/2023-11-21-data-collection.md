@@ -44,13 +44,38 @@ gdptable.loc[184, 'Country/Territory'] = 'SAO TOME AND PRINCIPE'
 
 First, I copied the url and then used a simple `pd.read_html` to extract the second table from the html. Wikipedia tables are known for being pretty messy to deal with because of annotations, footnotes, ascii keys, irregular tables structures, name inconsistencies, and so on. In this case, the table's column format introduced a multi-indexed structure to the data frame, which had to be removed. Additionally, some ascii keys and various annotation symbols had to be omitted. Finally, several country/territory names needed to be amended for naming consistency down the road. 
 
-This tedious cleaning yielded the table below.
+This tedious cleaning yielded the table below with the "Estimate" column being the CIA's approximation of the country's 2019 Real GDP per Capita. 
 
 ![gdptable]({{site.url}}.{{site.baseurl}}/assets/images/gdptable.png)
 
 If you think this step had some annoying wrangling and cleaning, buckle up. It only got worse down the road.
 
-## 
+## Population, Geographic Area, Population Density
 
+Next, I acquired the total population, land surface area, and the population density for each country/territory through Wikipedia. This table also helpfully supplied the sovereign state of each dependency. Observe the excerpt below.
 
+```python
+popurl = "https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population_density"
+poptables = pd.read_html(popurl)
+poptable = poptables[0]
+poptable = poptable.iloc[:, [1, 4, 6, 3]] #extract valuable columns
+poptable['Country/Territory'] = [country.split('(')[0].strip().upper() for country in poptable['Country or dependency']] #extract country name
+parents = [] #define parents list appending country name if not a subsidiary and parent country name if a subsidiary (evident by parentheses following entity name)
+for country in poptable['Country or dependency']:
+    if bool(re.search('\(', country)):
+        parent = country.split('(')[1].strip(')').upper()
+    else:
+        parent = country.split('(')[0].strip().upper()
+    parents.append(parent)
+poptable['Parent'] = parents #define parent country columns
+poptable = poptable.iloc[:, [4, 5, 1, 2, 3]] #extract and rearrange columns
+poptable.loc[30, 'Country/Territory'] = 'CURACAO' #hard code discrepant country names for future joining
+poptable.loc[60, 'Country/Territory'] = 'SAO TOME AND PRINCIPE'
+```
+
+Everything was pretty similar to the former table except for one thing--obtaining the parent country of a dependency. In the table, those entities were following in parentheses by its governing state while independent countries were standalone (disregarding footnotes and annotations). As such, in addition to the list comprehension step employed for the GDP table to clean the entity name, I added a for loop containing an if statement respecting the independence status of the entity. If parentheses were detected, the information in the parentheses was extracted as the parent country and appended to a list of parents. Otherwise, the country's name itself was used to indicate that the country was independent. 
+
+**Wikipedia is regularly updated. In between my data collection and writing this post, this Wikipedia page was revised rendering the above code invalid. For that reason, I don't have a picture available of the final population data. The excerpt above should be a good framework for you to correctly wrangle the data post-revision.**
+
+## Currency
 
