@@ -79,3 +79,43 @@ Everything was pretty similar to the former table except for one thing--obtainin
 
 ## Currency
 
+I obtained adequate currency information for each necessary country and territory from the IBAN website. 
+
+```python
+currurl = "https://www.iban.com/currency-codes"
+currtables = pd.read_html(currurl)
+currtable = currtables[0]
+currtable['Country'] = [country.split('(')[0].strip() for country in currtable['Country']] #fix country names
+currtable = currtable.iloc[:, [0, 2]] #extract country names and currency codes
+currtable.loc[253, 'Country'] = 'UNITED STATES' #hard code discrepant country names for future joining
+currtable.loc[35, 'Country'] = 'BRUNEI'
+currtable.loc[251, 'Country'] = 'UNITED KINGDOM'
+currtable.loc[127, 'Country'] = 'SOUTH KOREA'
+currtable.loc[263, 'Country'] = 'US VIRGIN ISLANDS'
+currtable.loc[262, 'Country'] = 'BRITISH VIRGIN ISLANDS'
+currtable.loc[196, 'Country'] = 'RUSSIA'
+currtable.loc[62, 'Country'] = 'CURACAO'
+currtable.loc[141, 'Country'] = 'NORTH MACEDONIA'
+currtable.loc[261, 'Country'] = 'VIETNAM'
+currtable.loc[228, 'Country'] = 'ESWATINI'
+currtable.loc[130, 'Country'] = 'LAOS'
+currtable.loc[39, 'Country'] = 'CAPE VERDE'
+currtable.loc[58, 'Country'] = 'IVORY COAST'
+currtable.loc[238, 'Country'] = 'EAST TIMOR'
+currtable.loc[233, 'Country'] = 'SYRIA'
+currtable.loc[236, 'Country'] = 'TANZANIA'
+currtable.loc[126, 'Country'] = 'NORTH KOREA'
+currtable.loc[54, 'Country'] = 'DR CONGO'
+currtable.loc[len(currtable.index)] = ['MACAU', 'MOP'] #hard code country/territories not found in iban table
+currtable.loc[len(currtable.index)] = ['KOSOVO', 'EUR']
+currtable.loc[len(currtable.index)] = ['PALESTINE', 'ILS']
+```
+
+As evident in the above code, aside from a little string manipulation, much of the work in this step was hard-coding country names to correct discrepancies for joining the tables later. Some entities were also not found in the IBAN table, so those had to be hard-coded as well. 
+
+Below is the currency table post-cleaning. 
+
+![currtable]({{site.url}}.{{site.baseurl}}/assets/images/currtable.png)
+
+## Preliminary Merge
+
