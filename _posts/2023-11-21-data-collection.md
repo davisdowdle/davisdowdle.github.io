@@ -24,7 +24,7 @@ The variables I collected for each relevant country/territory were name, parent 
 
 ## Real GDP per Capita
 
-As said, I acquired the GDP data from Wikipedia, who got the data from the CIA. The associated table can be viewed at the url given in the below code excerpt, which is the chunk for reading and cleaning the table.
+As said, I acquired the GDP data from Wikipedia, who got the data from the CIA. The associated table can be viewed at the url given in the below code excerpt, which is the chunk for reading and cleaning the table. Notice that the table also contained the UN region of the country.
 
 ```python
 gdpurl = "https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(PPP)_per_capita"
@@ -42,8 +42,15 @@ gdptable.loc[93, 'Country/Territory'] = 'SAINT MARTIN'
 gdptable.loc[184, 'Country/Territory'] = 'SAO TOME AND PRINCIPE'
 ```
 
+First, I copied the url and then used a simple `pd.read_html` to extract the second table from the html. Wikipedia tables are known for being pretty messy to deal with because of annotations, footnotes, ascii keys, irregular tables structures, name inconsistencies, and so on. In this case, the table's column format introduced a multi-indexed structure to the data frame, which had to be removed. Additionally, some ascii keys and various annotation symbols had to be omitted. Finally, several country/territory names needed to be amended for naming consistency down the road. 
+
+This tedious cleaning yielded the table below.
+
+![gdptable]({{site.url}}.{{site.baseurl}}/assets/images/gdptable.png)
+
+If you think this step had some annoying wrangling and cleaning, buckle up. It only got worse down the road.
+
+## 
 
 
 
-
-![hello]({{site.url}}.{{site.baseurl}}/assets/images/trade.png)
