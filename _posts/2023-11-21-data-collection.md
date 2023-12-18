@@ -12,6 +12,8 @@ Some things never change, like the fact that humans are always competing. Specif
 
 A common token of economic success in the international conversation is GDP per capita, especially that adjusted for Purchasing Power Parity (PPP). Finding this data for an adequate selection of countries/territories proved to be fairly difficult. In fact, finding robust international data for any variable was difficult without using Wikipedia. For that reason, I give a special thank you to Wikipedia for supplying the majority of the data in this endeavor. 
 
-Becuase most of the data came from Wikipedia, most of the data already existed in tabular data independently online as well. For that reason, the main challenge here was reading html tables, cleaning data, joining tables, cleaning data again, and then repeating iteratively until completion. 
+Becuase the majority of the data came from Wikipedia, most of it already existed in tabular data independently online as well. For that reason, the main challenge here was reading html tables, cleaning data, joining tables, cleaning data again, and then repeating iteratively until completion. 
 
 ## Variables
+
+![hello]({{site.url}}.{{site.baseurl}}/assets/images/trade.pdf)
