@@ -14,6 +14,36 @@ A common token of economic success in the international conversation is GDP per 
 
 Becuase the majority of the data came from Wikipedia, most of it already existed in tabular data independently online as well. For that reason, the main challenge here was reading html tables, cleaning data, joining tables, cleaning data again, and then repeating iteratively until completion. 
 
+The only necessary packages for this method are `pandas` and `re`. Below, the package `pandas` is represented as `pd`.
+
 ## Variables
+
+The variables I collected for each relevant country/territory were name, parent country (if applicable for territories), basic region according to the United Nations, primary currency, real GDP per capita (PPP), total population, total land area (sq mi), population density derived from the previous two fields, and trade ratio derived from dividing exports by imports. 
+
+# Step by Step
+
+## Real GDP per Capita
+
+As said, I acquired the GDP data from Wikipedia, who got the data from the CIA. The associated table can be viewed at the url given in the below code excerpt, which is the chunk for reading and cleaning the table.
+
+```python
+gdpurl = "https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(PPP)_per_capita"
+gdptables = pd.read_html(gdpurl)
+gdptable = gdptables[1]
+gdptable.columns = gdptable.columns.droplevel(0) #remove second-level column index
+gdptable = gdptable.iloc[:,[0, 6, 1]].sort_values('Estimate', ascending = False) #extract valuable columns and sort descending
+gdptable['Country/Territory'] = [next.replace('[n 1]', '').strip('*').upper() for next in \
+    [country.encode('ascii', 'ignore').decode('unicode_escape') for country in gdptable['Country/Territory']]] #remove ascii keys and other characters from country names
+gdptable = gdptable.reset_index(drop = True) 
+gdptable.loc[55, 'Country/Territory'] = 'US VIRGIN ISLANDS' #hard code discrepant country names for future joining
+gdptable.loc[57, 'Country/Territory'] = 'SINT MAARTEN'
+gdptable.loc[89, 'Country/Territory'] = 'CURACAO'
+gdptable.loc[93, 'Country/Territory'] = 'SAINT MARTIN'
+gdptable.loc[184, 'Country/Territory'] = 'SAO TOME AND PRINCIPE'
+```
+
+
+
+
 
 ![hello]({{site.url}}.{{site.baseurl}}/assets/images/trade.png)
