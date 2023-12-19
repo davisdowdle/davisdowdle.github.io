@@ -24,7 +24,9 @@ The variables I collected for each relevant country/territory were name, parent 
 
 ## Real GDP per Capita
 
-As said, I acquired the GDP data from Wikipedia, who got the data from the CIA. The associated table can be viewed at the url given in the below code excerpt, which is the chunk for reading and cleaning the table. Notice that the table also contained the UN region of the country.
+As said, I acquired the GDP data from Wikipedia, who got the data from the CIA. The associated table can be viewed at the url given in the below code excerpt, which is the chunk for reading and cleaning the table. Notice that the table also contained the UN region of the country. 
+
+**Note: the code chunks are dense. Don't feel obligated to thoroughly analyze the code. Use at your own leisure.**
 
 ```python
 gdpurl = "https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(PPP)_per_capita"
