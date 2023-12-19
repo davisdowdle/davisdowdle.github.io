@@ -117,5 +117,67 @@ Below is the currency table post-cleaning.
 
 ![currtable]({{site.url}}.{{site.baseurl}}/assets/images/currtable.png)
 
-## Preliminary Merge
+## Exports / Imports
+
+The CIA not only publishes GDP data for each country, but it also published exports and imports data. I used the 2019 round of data as much as I could. Below is the code for both tables.
+
+```python
+expurl = "https://www.cia.gov/the-world-factbook/field/exports/country-comparison/"
+exptables = pd.read_html(expurl)
+exptable = exptables[0]
+exptable['Country'] = [country.upper() for country in exptable['Country']] #fix country names to uppercase for joining
+exptable['Exports'] = [int(country.strip('$').replace(',', '')) for country in exptable['Unnamed: 2']] #extract exports as integer
+exptable = exptable.iloc[:, [1, 4]] #extract country name and exports
+```
+
+```python
+impurl = "https://www.cia.gov/the-world-factbook/field/imports/country-comparison/"
+imptables = pd.read_html(impurl)
+imptable = imptables[0]
+imptable['Country'] = [country.upper() for country in imptable['Country']] #fix country names to uppercase for joining
+imptable['Imports'] = [int(country.strip('$').replace(',', '')) for country in imptable['Unnamed: 2']] #extract imports as integer
+imptable = imptable.iloc[:, [1, 4]] #extract country name and exports
+```
+
+Again, most of the cleaning in this phase was just manipulating strings, including making countries totally upper case and getting rid of dollar signs and commas so they could be converted to integers instead of strings. 
+
+After priming these two tables, I joined the tables using the code below.
+
+```python
+trade = exptable.merge(imptable, how = 'outer', left_on = 'Country', right_on = 'Country') #join exports and imports, hardcoding Liechtenstein below using data from same source just one year earlier
+trade.loc[142, 'Exports'] = 3774000000 #https://www.cia.gov/the-world-factbook/countries/liechtenstein/#economy
+trade.loc[142, 'Imports'] = 2230000000 #https://www.cia.gov/the-world-factbook/countries/liechtenstein/#economy
+trade['Ratio'] = trade['Exports'] / trade['Imports'] #define trade ratio columns
+trade.loc[197, 'Country'] = 'FALKLAND ISLANDS' #hard code country names
+trade.loc[7, 'Country'] = 'SOUTH KOREA'
+trade.loc[33, 'Country'] = 'CZECH REPUBLIC'
+trade.loc[162, 'Country'] = 'US VIRGIN ISLANDS'
+trade.loc[28, 'Country'] = 'TURKEY'
+trade.loc[143, 'Country'] = 'BAHAMAS'
+trade.loc[215, 'Country'] = 'SAINT HELENA, ASCENSION AND TRISTAN DA CUNHA'
+trade.loc[188, 'Country'] = 'CAPE VERDE'
+trade.loc[93, 'Country'] = 'IVORY COAST'
+trade.loc[153, 'Country'] = 'EAST TIMOR'
+trade.loc[85, 'Country'] = 'MYANMAR'
+trade.loc[202, 'Country'] = 'MICRONESIA'
+trade.loc[130, 'Country'] = 'CONGO'
+trade.loc[205, 'Country'] = 'GAMBIA'
+trade.loc[199, 'Country'] = 'NORTH KOREA'
+trade.loc[82, 'Country'] = 'DR CONGO' #hard code exports/imports for missing countries
+trade.loc[len(trade.index)] = ['ISLE OF MAN', 432000000, 922000000, 432000000/922000000] #https://assets.publishing.service.gov.uk/media/653fbb156de3b9000da7a609/isle-of-man-trade-and-investment-factsheet-2023-11-01.pdf
+trade.loc[len(trade.index)] = ['JERSEY', 3900000000, 4300000000, 3900000000/4300000000] #https://assets.publishing.service.gov.uk/media/653fbe9246532b000d67f545/jersey-trade-and-investment-factsheet-2023-11-01.pdf
+trade.loc[len(trade.index)] = ['GUERNSEY', 953000000, 3100000000, 953000000/3100000000] #https://assets.publishing.service.gov.uk/media/653fba4746532b001467f52f/guernsey-trade-and-investment-factsheet-2023-11-01.pdf
+trade.loc[len(trade.index)] = ['SAINT MARTIN', 23700000, 529000000, 23700000/529000000] #https://oec.world/en/profile/country/maf
+trade.loc[len(trade.index)] = ['PALESTINE', 1450000000, 6940000000, 1450000000/6940000000] #https://oec.world/en/profile/country/pse
+```
+
+In this step, a lot of hard-coding had to take place to, again, correct inconsistent naming and incorporate missing entities. The missing entities' data had to be looked up individually at the corresponding links given above. 
+
+Notice also that I generated the trade ratio column, the quotient of the exports and the imports. 
+
+Here is what the trade data looked like following the execution of the above code chunks. 
+
+![tradetable]({{site.url}}.{{site.baseurl}}/assets/images/tradetable.png)
+
+
 
