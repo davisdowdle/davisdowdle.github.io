@@ -272,4 +272,4 @@ final.to_csv('gdp.csv', index = None) #send to csv
 
 Perfect. We're ready to dig into the data and explore. But I'm not going to lie--getting that data was kind of grueling. Behind the scenes, I spent a lot of time running into problems with discrepancies in the data and hard-coding. Perhaps the process would've been a lot faster and less tedious if I spent more time looking for an accessible, relevant API. I think it may be worth to thoroughly consider exhausting possible API options before deciding to gather data by hand from several sources.
 
-Now let's get into the data!
+Now let's get into the data! Click <a href="https://davisdowdle.github.io/2023/12/10/eda.html" target="_blank">here</a> to advance to the analysis.
