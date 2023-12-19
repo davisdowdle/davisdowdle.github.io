@@ -220,6 +220,18 @@ final = final.reset_index(drop = True)
 
 Some final cleaning at the end was necessary to reconcile all inconsistencies. I renamed coolumns, hard-coded some corrections to discrepancies in country and parent country names, and selected only the most prominent currency for countries that accepted multiple. 
 
-Voila. See the beautiful table directly below. The final product.
+Voila! See the beautiful table directly below. The final product.
 
 ![finaltable]({{site.url}}.{{site.baseurl}}/assets/images/finaltable.png)
+
+All that's left to do is save the dataframe as a csv. 
+
+```python
+final.to_csv('gdp.csv', index = None) #send to csv
+```
+
+# Final Thoughts
+
+Perfect. We're ready to dig into the data and explore. But I'm not going to lie--getting that data was kind of grueling. Behind the scenes, I spent a lot of time running into problems with discrepancies in the data and hard-coding. Perhaps the process would've been a lot faster and less tedious if I spent more time looking for an accessible, relevant API. I think it may be worth to thoroughly consider exhausting possible API options before deciding to gather data by hand from several sources.
+
+Now let's get into the data!
