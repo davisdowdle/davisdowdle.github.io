@@ -179,5 +179,47 @@ Here is what the trade data looked like following the execution of the above cod
 
 ![tradetable]({{site.url}}.{{site.baseurl}}/assets/images/tradetable.png)
 
+## Merges
 
+The last step was to merge all the tables and finalize with some cleaning.
 
+First, the GDP, population, and currency tables were joined with the excerpt below.
+
+```python
+inter = gdptable.merge(poptable, how = 'inner', left_on = 'Country/Territory', right_on = 'Country/Territory') #join gdp and pop
+inter = inter[inter['Country/Territory'].duplicated() == False] #remove repeat countries
+inter = inter.merge(currtable, how = 'left', left_on = 'Country/Territory', right_on = 'Country') #join gdp, pop, and curr
+```
+
+The only abnormality in this step was that duplicate rows had to be removed after merging the GDP and population tables.
+
+After the former three tables merged, I merged the resultant dataframe with the trade dataframe. 
+
+```python
+final = inter.merge(trade, how = 'left', left_on = 'Country/Territory', right_on = 'Country') #merge all
+final = final.iloc[:, [0, 3, 2, 8, 1, 4, 5, 6, 12]] #rearrange columns
+final.columns = ['Entity', 'Parent', 'Region', 'Currency', 'GDP', 'Population', 'Area', 'Density', 'Ratio'] #rename columns
+final.iloc[final[final['Parent'] == 'MICRONESIA'].index, 0] = 'FEDERATED STATES OF MICRONESIA' #fix parent country names to correct/consistent names
+final.iloc[final[final['Parent'] == 'CONGO'].index, 0] = 'REPUBLIC OF THE CONGO'
+final.iloc[final[final['Parent'] == 'DR CONGO'].index, 0] = 'DEMOCRATIC REPUBLIC OF THE CONGO'
+final.iloc[final[final['Parent'] == 'UK'].index, 1] = 'UNITED KINGDOM'
+final.iloc[final[final['Parent'] == 'US'].index, 1] = 'UNITED STATES'
+final.iloc[final[final['Parent'] == 'NL'].index, 1] = 'NETHERLANDS'
+final.iloc[final[final['Parent'] == 'NZ'].index, 1] = 'NEW ZEALAND'
+final.iloc[final[final['Parent'] == 'COOK ISLANDS'].index, 1] = 'NEW ZEALAND'
+final.iloc[final[final['Parent'] == 'NIUE'].index, 1] = 'NEW ZEALAND'
+final.iloc[final[final['Parent'] == 'SÃO TOMÉ AND PRÍNCIPE'].index, 1] = 'SAO TOME AND PRINCIPE'
+final.iloc[final[final['Parent'] == 'CONGO'].index, 1] = 'REPUBLIC OF THE CONGO'
+final.iloc[final[final['Parent'] == 'DR CONGO'].index, 1] = 'DEMOCRATIC REPUBLIC OF THE CONGO'
+final.iloc[final[final['Parent'] == 'METROPOLITAN'].index, 1] = 'FRANCE'
+final.iloc[final[final['Parent'] == 'MICRONESIA'].index, 1] = 'FEDERATED STATES OF MICRONESIA'
+final.iloc[final[final['Parent'] == 'EXCLUDING ANTARCTICA'].index, 1] = 'WORLD'
+final.drop(index = [8, 10, 75, 81, 86, 100, 117, 136, 147, 155, 158, 166, 170, 210, 219], inplace = True) #remove country indexes duplicated because of currencies (most official currency favored)
+final = final.reset_index(drop = True)
+```
+
+Some final cleaning at the end was necessary to reconcile all inconsistencies. I renamed coolumns, hard-coded some corrections to discrepancies in country and parent country names, and selected only the most prominent currency for countries that accepted multiple. 
+
+Voila. See the beautiful table directly below. The final product.
+
+![finaltable]({{site.url}}.{{site.baseurl}}/assets/images/finaltable.png)
