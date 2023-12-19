@@ -6,13 +6,13 @@ description: Here's how I collected the data for analyzing international economi
 image: "https://upload.wikimedia.org/wikipedia/commons/e/ee/Map_of_countries_by_GDP_%28nominal%29_per_capita_in_2023.svg"
 --- 
 
-Some things never change, like the fact that humans are always competing. Specifically, for millenia, nation has fought nation to become the economic superpower of the world; from mercantilism to conquest to protectionism and so on, one of the greatest human competitions has been to create the most coveted economy. It's no different today. Economists, politicians, and voters alike are all interested in investing in their economy to make it the symbol of their country's superiority. But how do countries achieve this? How does a country create wealth for its citizens? What factors contribute to the overall evonomic health of a country? I wanted to see what patterns I could find, so I did the below web scraping to analyze.
+Some things never change, like the fact that humans are always competing. Specifically, for millenia, nation has fought nation to become the economic superpower of the world; from mercantilism to conquest to protectionism and so on, one of the greatest human competitions has been to create the most coveted economy. It's no different today. Economists, politicians, and voters alike are all interested in investing in their economy to make it the symbol of their country's superiority. But how do countries achieve this? How does a country create wealth for its citizens? What factors contribute to the overall economic health of a country? I wanted to see what patterns I could find, so I did the below web scraping to analyze.
 
 ## General Process
 
-A common token of economic success in the international conversation is GDP per capita, especially that adjusted for Purchasing Power Parity (PPP). Finding this data for an adequate selection of countries/territories proved to be fairly difficult. In fact, finding robust international data for any variable was difficult without using Wikipedia. For that reason, I give a special thank you to Wikipedia for supplying the majority of the data in this endeavor. 
+A common token of economic success in the international conversation is GDP per capita, especially when adjusted for Purchasing Power Parity (PPP). Finding this data for an adequate selection of countries/territories proved to be fairly difficult. In fact, finding robust international data for any variable was difficult without using Wikipedia. For that reason, I give a special thank you to Wikipedia for supplying the majority of the data in this endeavor. 
 
-Becuase the majority of the data came from Wikipedia, most of it already existed in tabular data independently online as well. For that reason, the main challenge here was reading html tables, cleaning data, joining tables, cleaning data again, and then repeating iteratively until completion. 
+Because the majority of the data came from Wikipedia, most of it already existed in tabular form independently online as well. For that reason, the main challenge here was reading html tables, cleaning data, joining tables, cleaning data again, and then repeating iteratively until completion. 
 
 The only necessary packages for this method are `pandas` and `re`. Below, the package `pandas` is represented as `pd`.
 
@@ -29,15 +29,20 @@ As said, I acquired the GDP data from Wikipedia, who got the data from the CIA. 
 **Note: the code chunks are dense. Don't feel obligated to thoroughly analyze the code. Use at your own convenience.**
 
 ```python
-gdpurl = "https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(PPP)_per_capita"
-gdptables = pd.read_html(gdpurl)
-gdptable = gdptables[1]
-gdptable.columns = gdptable.columns.droplevel(0) #remove second-level column index
-gdptable = gdptable.iloc[:,[0, 6, 1]].sort_values('Estimate', ascending = False) #extract valuable columns and sort descending
+##obtain url, html, and get necessary table from website
+gdpurl = "https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(PPP)_per_capita" #wikipedia url
+gdptables = pd.read_html(gdpurl) #get list of html tables
+gdptable = gdptables[1] #required table is second table
+
+##restructure table and indexes, modify columns using list comprehension
+gdptable.columns = gdptable.columns.droplevel(0) #remove second-level column index (wikipedia has lots of index structuring)
+gdptable = gdptable.iloc[:,[0, 6, 1]].sort_values('Estimate', ascending = False) #extract valuable columns and sort descending by gdp
 gdptable['Country/Territory'] = [next.replace('[n 1]', '').strip('*').upper() for next in \
     [country.encode('ascii', 'ignore').decode('unicode_escape') for country in gdptable['Country/Territory']]] #remove ascii keys and other characters from country names
-gdptable = gdptable.reset_index(drop = True) 
-gdptable.loc[55, 'Country/Territory'] = 'US VIRGIN ISLANDS' #hard code discrepant country names for future joining
+gdptable = gdptable.reset_index(drop = True) #reset index
+
+##hard code discrepant country names for future joining
+gdptable.loc[55, 'Country/Territory'] = 'US VIRGIN ISLANDS' 
 gdptable.loc[57, 'Country/Territory'] = 'SINT MAARTEN'
 gdptable.loc[89, 'Country/Territory'] = 'CURACAO'
 gdptable.loc[93, 'Country/Territory'] = 'SAINT MARTIN'
@@ -57,9 +62,12 @@ If you think this step had some annoying wrangling and cleaning, buckle up. It o
 Next, I acquired the total population, land surface area, and the population density for each country/territory through Wikipedia. This table also helpfully supplied the sovereign state of each dependency. Observe the excerpt below.
 
 ```python
-popurl = "https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population_density"
+##obtain url, html, and get necessary table from website
+popurl = "https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population_density" #wikipedia url
 poptables = pd.read_html(popurl)
-poptable = poptables[0]
+poptable = poptables[0] #first table element is goal
+
+##rearrange table, split country/territory 
 poptable = poptable.iloc[:, [1, 4, 6, 3]] #extract valuable columns
 poptable['Country/Territory'] = [country.split('(')[0].strip().upper() for country in poptable['Country or dependency']] #extract country name
 parents = [] #define parents list appending country name if not a subsidiary and parent country name if a subsidiary (evident by parentheses following entity name)
@@ -71,7 +79,9 @@ for country in poptable['Country or dependency']:
     parents.append(parent)
 poptable['Parent'] = parents #define parent country columns
 poptable = poptable.iloc[:, [4, 5, 1, 2, 3]] #extract and rearrange columns
-poptable.loc[30, 'Country/Territory'] = 'CURACAO' #hard code discrepant country names for future joining
+
+##hard code discrepant country names for future joining
+poptable.loc[30, 'Country/Territory'] = 'CURACAO' 
 poptable.loc[60, 'Country/Territory'] = 'SAO TOME AND PRINCIPE'
 ```
 
@@ -84,12 +94,17 @@ Everything was pretty similar to the former table except for one thing--obtainin
 I obtained adequate currency information for each necessary country and territory from the IBAN website. 
 
 ```python
-currurl = "https://www.iban.com/currency-codes"
+##obtain url, html, and get necessary table from website
+currurl = "https://www.iban.com/currency-codes" #iban url
 currtables = pd.read_html(currurl)
-currtable = currtables[0]
+currtable = currtables[0] #first table element is goal
+
+##remove parentheses from country names and get valuable columns
 currtable['Country'] = [country.split('(')[0].strip() for country in currtable['Country']] #fix country names
 currtable = currtable.iloc[:, [0, 2]] #extract country names and currency codes
-currtable.loc[253, 'Country'] = 'UNITED STATES' #hard code discrepant country names for future joining
+
+##hard code discrepant country names for future joining
+currtable.loc[253, 'Country'] = 'UNITED STATES' 
 currtable.loc[35, 'Country'] = 'BRUNEI'
 currtable.loc[251, 'Country'] = 'UNITED KINGDOM'
 currtable.loc[127, 'Country'] = 'SOUTH KOREA'
@@ -124,33 +139,46 @@ Below is the currency table post-cleaning.
 The CIA not only publishes GDP data for each country, but it also published exports and imports data. I used the 2019 round of data as much as I could. Below is the code for both tables.
 
 ```python
-expurl = "https://www.cia.gov/the-world-factbook/field/exports/country-comparison/"
+##obtain url, html, and get necessary table from website
+expurl = "https://www.cia.gov/the-world-factbook/field/exports/country-comparison/" #cia exports url
 exptables = pd.read_html(expurl)
-exptable = exptables[0]
+exptable = exptables[0] #first table element is goal
+
+##make country names uppercase and change dollar value strings to integer
 exptable['Country'] = [country.upper() for country in exptable['Country']] #fix country names to uppercase for joining
 exptable['Exports'] = [int(country.strip('$').replace(',', '')) for country in exptable['Unnamed: 2']] #extract exports as integer
 exptable = exptable.iloc[:, [1, 4]] #extract country name and exports
 ```
 
 ```python
-impurl = "https://www.cia.gov/the-world-factbook/field/imports/country-comparison/"
+##obtain url, html, and get necessary table from website
+impurl = "https://www.cia.gov/the-world-factbook/field/imports/country-comparison/" #cia imports url
 imptables = pd.read_html(impurl)
-imptable = imptables[0]
+imptable = imptables[0] #first table element is goal
+
+##make country names uppercase and change dollar value strings to integer
 imptable['Country'] = [country.upper() for country in imptable['Country']] #fix country names to uppercase for joining
 imptable['Imports'] = [int(country.strip('$').replace(',', '')) for country in imptable['Unnamed: 2']] #extract imports as integer
 imptable = imptable.iloc[:, [1, 4]] #extract country name and exports
 ```
 
-Again, most of the cleaning in this phase was just manipulating strings, including making countries totally upper case and getting rid of dollar signs and commas so they could be converted to integers instead of strings. 
+Again, most of the cleaning in this phase was just manipulating strings, including making countries totally upper case and getting rid of dollar signs and commas so they could be converted to integers from strings. 
 
 After priming these two tables, I joined the tables using the code below.
 
 ```python
-trade = exptable.merge(imptable, how = 'outer', left_on = 'Country', right_on = 'Country') #join exports and imports, hardcoding Liechtenstein below using data from same source just one year earlier
+##merge exports and imports tables
+trade = exptable.merge(imptable, how = 'outer', left_on = 'Country', right_on = 'Country') 
+
+##hardcode Liechtenstein below using data from same source just one year earlier
 trade.loc[142, 'Exports'] = 3774000000 #https://www.cia.gov/the-world-factbook/countries/liechtenstein/#economy
 trade.loc[142, 'Imports'] = 2230000000 #https://www.cia.gov/the-world-factbook/countries/liechtenstein/#economy
-trade['Ratio'] = trade['Exports'] / trade['Imports'] #define trade ratio columns
-trade.loc[197, 'Country'] = 'FALKLAND ISLANDS' #hard code country names
+
+##define new ratio columns as quotient of exports and imports
+trade['Ratio'] = trade['Exports'] / trade['Imports']
+
+##hard code country names for later joining
+trade.loc[197, 'Country'] = 'FALKLAND ISLANDS' 
 trade.loc[7, 'Country'] = 'SOUTH KOREA'
 trade.loc[33, 'Country'] = 'CZECH REPUBLIC'
 trade.loc[162, 'Country'] = 'US VIRGIN ISLANDS'
@@ -165,7 +193,9 @@ trade.loc[202, 'Country'] = 'MICRONESIA'
 trade.loc[130, 'Country'] = 'CONGO'
 trade.loc[205, 'Country'] = 'GAMBIA'
 trade.loc[199, 'Country'] = 'NORTH KOREA'
-trade.loc[82, 'Country'] = 'DR CONGO' #hard code exports/imports for missing countries
+trade.loc[82, 'Country'] = 'DR CONGO' 
+
+##hard code exports/imports for missing countries
 trade.loc[len(trade.index)] = ['ISLE OF MAN', 432000000, 922000000, 432000000/922000000] #https://assets.publishing.service.gov.uk/media/653fbb156de3b9000da7a609/isle-of-man-trade-and-investment-factsheet-2023-11-01.pdf
 trade.loc[len(trade.index)] = ['JERSEY', 3900000000, 4300000000, 3900000000/4300000000] #https://assets.publishing.service.gov.uk/media/653fbe9246532b000d67f545/jersey-trade-and-investment-factsheet-2023-11-01.pdf
 trade.loc[len(trade.index)] = ['GUERNSEY', 953000000, 3100000000, 953000000/3100000000] #https://assets.publishing.service.gov.uk/media/653fba4746532b001467f52f/guernsey-trade-and-investment-factsheet-2023-11-01.pdf
@@ -188,7 +218,8 @@ The last step was to merge all the tables and finalize with some cleaning.
 First, the GDP, population, and currency tables were joined with the excerpt below.
 
 ```python
-inter = gdptable.merge(poptable, how = 'inner', left_on = 'Country/Territory', right_on = 'Country/Territory') #join gdp and pop
+##join gdp and pop, remove duplicate rows, then join currency onto that
+inter = gdptable.merge(poptable, how = 'inner', left_on = 'Country/Territory', right_on = 'Country/Territory') 
 inter = inter[inter['Country/Territory'].duplicated() == False] #remove repeat countries
 inter = inter.merge(currtable, how = 'left', left_on = 'Country/Territory', right_on = 'Country') #join gdp, pop, and curr
 ```
@@ -198,10 +229,13 @@ The only abnormality in this step was that duplicate rows had to be removed afte
 After the former three tables merged, I merged the resultant dataframe with the trade dataframe. 
 
 ```python
+##final merge of all info, rearrange and rename columns
 final = inter.merge(trade, how = 'left', left_on = 'Country/Territory', right_on = 'Country') #merge all
 final = final.iloc[:, [0, 3, 2, 8, 1, 4, 5, 6, 12]] #rearrange columns
 final.columns = ['Entity', 'Parent', 'Region', 'Currency', 'GDP', 'Population', 'Area', 'Density', 'Ratio'] #rename columns
-final.iloc[final[final['Parent'] == 'MICRONESIA'].index, 0] = 'FEDERATED STATES OF MICRONESIA' #fix parent country names to correct/consistent names
+
+##fix parent country names to correct/consistent names
+final.iloc[final[final['Parent'] == 'MICRONESIA'].index, 0] = 'FEDERATED STATES OF MICRONESIA' 
 final.iloc[final[final['Parent'] == 'CONGO'].index, 0] = 'REPUBLIC OF THE CONGO'
 final.iloc[final[final['Parent'] == 'DR CONGO'].index, 0] = 'DEMOCRATIC REPUBLIC OF THE CONGO'
 final.iloc[final[final['Parent'] == 'UK'].index, 1] = 'UNITED KINGDOM'
@@ -216,11 +250,13 @@ final.iloc[final[final['Parent'] == 'DR CONGO'].index, 1] = 'DEMOCRATIC REPUBLIC
 final.iloc[final[final['Parent'] == 'METROPOLITAN'].index, 1] = 'FRANCE'
 final.iloc[final[final['Parent'] == 'MICRONESIA'].index, 1] = 'FEDERATED STATES OF MICRONESIA'
 final.iloc[final[final['Parent'] == 'EXCLUDING ANTARCTICA'].index, 1] = 'WORLD'
-final.drop(index = [8, 10, 75, 81, 86, 100, 117, 136, 147, 155, 158, 166, 170, 210, 219], inplace = True) #remove country indexes duplicated because of currencies (most official currency favored)
-final = final.reset_index(drop = True)
+
+##remove country indexes duplicated because of currencies (most official currency favored) and then reset index
+final.drop(index = [8, 10, 75, 81, 86, 100, 117, 136, 147, 155, 158, 166, 170, 210, 219], inplace = True) 
+final = final.reset_index(drop = True) #reset index
 ```
 
-Some final cleaning at the end was necessary to reconcile all inconsistencies. I renamed coolumns, hard-coded some corrections to discrepancies in country and parent country names, and selected only the most prominent currency for countries that accepted multiple. 
+Some final cleaning at the end was necessary to reconcile all inconsistencies. I renamed columns, hard-coded some corrections to discrepancies in country and parent country names, and selected only the most prominent currency for countries that accepted multiple. 
 
 Voila! See the beautiful table directly below. The final product.
 
